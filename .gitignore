@@ -216,3 +216,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# SQLite (local dev)
+*.db
+*.db-journal
+*.db-wal
+
+# IDE
+.idea/
