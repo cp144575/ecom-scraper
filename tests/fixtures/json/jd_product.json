@@ -1,0 +1,14 @@
+{
+  "platform": "jd",
+  "sku_id": "100012043978",
+  "title": "某品牌 手机 12GB+256GB 黑色",
+  "price": "¥3999.00",
+  "shop": {"shop_id": "1000004123", "name": "某品牌京东自营旗舰店"},
+  "skus": [
+    {"sku_id": "100012043978-A", "attributes": {"颜色": "黑色"}, "price": "¥3999.00", "stock": 120},
+    {"sku_id": "100012043978-B", "attributes": {"颜色": "白色"}, "price": "¥4099.00", "stock": 0}
+  ],
+  "category": "手机通讯 > 手机",
+  "brand": "某品牌",
+  "images": ["https://img.jd.com/a.jpg"]
+}

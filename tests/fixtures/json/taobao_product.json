@@ -1,0 +1,13 @@
+{
+  "platform": "taobao",
+  "itemId": "654321",
+  "title": "某店铺 连衣裙 夏季新款",
+  "price": "199.00",
+  "currency": "CNY",
+  "shop": {"shopId": "T888", "shopName": "某旗舰店"},
+  "skuList": [
+    {"skuId": "S1", "properties": {"尺码": "M"}, "price": "199.00", "quantity": 50},
+    {"skuId": "S2", "properties": {"尺码": "L"}, "price": "209.00", "quantity": 30}
+  ],
+  "images": ["https://img.taobao.com/b.jpg"]
+}

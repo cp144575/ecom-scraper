@@ -1,0 +1,13 @@
+{
+  "platform": "amazon",
+  "asin": "B0ABC123",
+  "title": "Wireless Earbuds",
+  "price": "$49.99",
+  "currency": "USD",
+  "merchant": {"merchantId": "A1B2C3D4", "name": "Amazon.com"},
+  "variations": [
+    {"asin": "B0ABC123-BLK", "attributes": {"Color": "Black"}, "price": "$49.99", "stock": 200},
+    {"asin": "B0ABC123-WHT", "attributes": {"Color": "White"}, "price": "$54.99", "stock": 80}
+  ],
+  "images": ["https://images.amazon.com/c.jpg"]
+}
