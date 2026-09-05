@@ -2,7 +2,7 @@
 
 自研异步爬虫引擎 + 国内/海外电商多平台采集 + 分布式 Worker + 数据分析 + 生产管理平台。
 
-当前进度：**V4（Distributed Crawling）** —— 在 V3 电商领域模型之上，加入 Redis 分布式队列、任务租约/心跳/恢复、分布式去重与限流、多 worker 调度。
+当前进度：**V5（Production & Analytics Platform）** —— 在 V4 分布式采集之上，加入 FastAPI 控制面（任务/平台/Worker/分析 API）、Prometheus 指标、Polars 批量分析、Docker Compose 与 GitHub Actions CI/CD。
 
 ## 目录结构
 
@@ -28,7 +28,8 @@ src/ecom_scraper/
 ├── storage/       # SQLAlchemy 2.x 异步 ORM + Repository
 ├── analysis/      # 价格 / 库存指标 + 平台比较
 ├── config/        # 环境配置
-├── observability/ # structlog 结构化日志
+├── api/           # FastAPI 控制面（tasks/platforms/workers/analytics）
+├── observability/ # structlog 日志 + Prometheus 指标
 └── exceptions/    # 异常层级
 ```
 
@@ -52,6 +53,14 @@ uv run mypy src
 ```
 
 四条命令全部通过才算完成交付。
+
+## API 服务
+
+`ash
+uv run uvicorn ecom_scraper.api.app:app --reload
+`
+
+接口：/health、/metrics、/tasks、/platforms、/workers、/products、/analytics/*。
 
 ## 多 worker 负载测试
 
@@ -81,4 +90,5 @@ REDIS_URL=redis://127.0.0.1:6379/0
 - [五版本开发路线](roadmap/ecom-scraper-5-versions-optimized-v2.md)
 - [技术栈与依赖清单](roadmap/ecom-scraper-dependencies-optimized-v2.md)
 - [编码规范](docs/coding-standards/)
+
 

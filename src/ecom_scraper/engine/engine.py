@@ -7,6 +7,7 @@ from structlog.stdlib import BoundLogger
 from ecom_scraper.concurrency.controller import ConcurrencyController
 from ecom_scraper.fetcher.base import Fetcher
 from ecom_scraper.models.product import Product
+from ecom_scraper.observability.metrics import crawler_items_total, crawler_requests_total
 from ecom_scraper.pipeline.pipeline import PipelineLike
 from ecom_scraper.queue.base import Queue
 from ecom_scraper.rate_limit.local import DomainRateLimiter
@@ -46,8 +47,6 @@ class AsyncEngine:
             asyncio.create_task(self._worker(spider, products)) for _ in range(workers_count)
         ]
         try:
-            # Workers drain the bounded queue while it is being seeded,
-            # so backpressure cannot deadlock the producer.
             await self._seed(spider)
             async with self._pending_changed:
                 while self._pending > 0:
@@ -81,11 +80,16 @@ class AsyncEngine:
                     )
                     product = spider.parse(response)
                     if product is not None:
+                        crawler_requests_total.labels(status="success").inc()
+                        crawler_items_total.inc()
                         await self._pipeline.process(product)
                         products.append(product)
+                    else:
+                        crawler_requests_total.labels(status="no_product").inc()
             except asyncio.CancelledError:
                 raise
             except Exception as exc:
+                crawler_requests_total.labels(status="failed").inc()
                 if self._logger is not None:
                     self._logger.error(
                         "request_failed",

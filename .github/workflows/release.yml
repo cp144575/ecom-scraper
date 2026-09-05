@@ -1,0 +1,16 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and push image
+        run: docker build -f deployments/docker/api/Dockerfile -t ghcr.io/${{ github.repository }}:${GITHUB_REF_NAME} .

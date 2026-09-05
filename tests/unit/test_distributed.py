@@ -6,7 +6,7 @@ import pytest
 from fakeredis import FakeAsyncRedis
 
 from ecom_scraper.concurrency.controller import ConcurrencyController
-from ecom_scraper.distributed.coordination import WorkerHeartbeat
+from ecom_scraper.distributed.coordination import WorkerHeartbeat, WorkerRegistry
 from ecom_scraper.distributed.dedup import RedisDedup
 from ecom_scraper.distributed.queue import LeasingRedisQueue
 from ecom_scraper.distributed.rate_limit import RedisRateLimiter
@@ -70,6 +70,15 @@ async def test_worker_heartbeat_tracks_liveness(redis: FakeAsyncRedis) -> None:
     assert await heartbeat.is_alive() is False
     await heartbeat.beat(status="running", load=3)
     assert await heartbeat.is_alive() is True
+
+
+async def test_worker_registry_lists_workers(redis: FakeAsyncRedis) -> None:
+    await WorkerHeartbeat(redis, worker_id="w1").beat()
+    await WorkerHeartbeat(redis, worker_id="w2").beat()
+    registry = WorkerRegistry(redis)
+    assert await registry.list_workers() == ["w1", "w2"]
+    info = await registry.get_worker("w1")
+    assert info["status"] == "running"
 
 
 class _NoopPipeline:

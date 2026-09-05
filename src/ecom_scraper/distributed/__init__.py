@@ -1,4 +1,4 @@
-from ecom_scraper.distributed.coordination import WorkerHeartbeat
+from ecom_scraper.distributed.coordination import WorkerHeartbeat, WorkerRegistry
 from ecom_scraper.distributed.dedup import RedisDedup
 from ecom_scraper.distributed.queue import LeasingRedisQueue
 from ecom_scraper.distributed.rate_limit import RedisRateLimiter
@@ -13,5 +13,6 @@ __all__ = [
     "RedisDedup",
     "RedisRateLimiter",
     "WorkerHeartbeat",
+    "WorkerRegistry",
     "recover_loop",
 ]

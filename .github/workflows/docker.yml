@@ -1,0 +1,13 @@
+name: Docker
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build API image
+        run: docker build -f deployments/docker/api/Dockerfile -t ecom-scraper-api .

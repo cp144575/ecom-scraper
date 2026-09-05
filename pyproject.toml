@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ecom-scraper"
-version = "0.4.0"
+version = "0.5.0"
 description = "Self-built async crawler engine for multi-platform e-commerce data collection."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -23,6 +23,10 @@ dependencies = [
     "pymysql",
     "structlog",
     "playwright",
+    "fastapi",
+    "uvicorn",
+    "prometheus-client",
+    "polars",
 ]
 
 [dependency-groups]
@@ -32,6 +36,7 @@ dev = [
     "ruff",
     "mypy",
     "fakeredis",
+    "httpx",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -42,6 +47,9 @@ line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
 extend-exclude = [".agents", "docs", "roadmap", ".idea", ".venv"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.Path", "fastapi.Header"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]

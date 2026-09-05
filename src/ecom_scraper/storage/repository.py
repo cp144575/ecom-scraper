@@ -118,6 +118,20 @@ class AsyncProductRepository:
                 for row in rows
             ]
 
+    async def list_shops(self) -> list[Shop]:
+        """Return every persisted shop."""
+        async with self._session_factory() as session:
+            rows = await session.scalars(select(ShopRow))
+            return [
+                Shop(
+                    platform=row.platform,
+                    platform_shop_id=row.platform_shop_id,
+                    name=row.name,
+                    url=row.url,
+                )
+                for row in rows
+            ]
+
     async def _upsert_shop(self, session: AsyncSession, shop: Shop) -> None:
         row = await session.scalar(
             select(ShopRow).where(
