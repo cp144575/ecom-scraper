@@ -2,7 +2,7 @@
 
 自研异步爬虫引擎 + 国内/海外电商多平台采集 + 分布式 Worker + 数据分析 + 生产管理平台。
 
-当前进度：**V3（E-commerce Domain）** —— 在 V2 异步高并发引擎之上，建立电商领域模型、平台适配器、规范化/校验、浏览器/代理、基础分析，首批支持 JD、Taobao、Amazon。
+当前进度：**V4（Distributed Crawling）** —— 在 V3 电商领域模型之上，加入 Redis 分布式队列、任务租约/心跳/恢复、分布式去重与限流、多 worker 调度。
 
 ## 目录结构
 
@@ -11,6 +11,7 @@ src/ecom_scraper/
 ├── engine/        # AsyncEngine：异步 worker 编排
 ├── request/       # Request / Response / fingerprint 去重
 ├── queue/         # 有界队列（内存 / Redis）
+├── distributed/   # 分布式队列 / 租约 / 心跳 / 恢复 / 去重 / 限流
 ├── concurrency/   # 全局 + 域名级并发控制
 ├── retry/         # RetryPolicy：指数退避 + 抖动
 ├── rate_limit/    # 令牌桶限流
@@ -52,6 +53,11 @@ uv run mypy src
 
 四条命令全部通过才算完成交付。
 
+## 多 worker 负载测试
+
+`ash
+uv run python scripts/benchmark/multi_worker_load_test.py 100000 5
+``n
 ## 负载测试
 
 ```bash
@@ -75,3 +81,4 @@ REDIS_URL=redis://127.0.0.1:6379/0
 - [五版本开发路线](roadmap/ecom-scraper-5-versions-optimized-v2.md)
 - [技术栈与依赖清单](roadmap/ecom-scraper-dependencies-optimized-v2.md)
 - [编码规范](docs/coding-standards/)
+

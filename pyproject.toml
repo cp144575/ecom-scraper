@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ecom-scraper"
-version = "0.3.0"
+version = "0.4.0"
 description = "Self-built async crawler engine for multi-platform e-commerce data collection."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -31,6 +31,7 @@ dev = [
     "pytest-asyncio",
     "ruff",
     "mypy",
+    "fakeredis",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -62,3 +63,4 @@ ignore_missing_imports = true
 testpaths = ["tests"]
 addopts = "-q"
 asyncio_mode = "auto"
+
