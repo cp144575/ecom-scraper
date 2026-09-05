@@ -1,23 +1,26 @@
-"""Database engine and session factories."""
+"""Async database engine and session factories."""
 
-from sqlalchemy import Engine, create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from ecom_scraper.storage.models import Base
 
 
-def make_engine(database_url: str) -> Engine:
-    """Build a SQLAlchemy engine for the given URL."""
-    if database_url.startswith("sqlite"):
-        return create_engine(database_url, echo=False)
-    return create_engine(database_url, echo=False, pool_pre_ping=True)
+def make_async_engine(database_url: str) -> AsyncEngine:
+    """Build an async SQLAlchemy engine for the given URL."""
+    return create_async_engine(database_url, echo=False, pool_pre_ping=True)
 
 
-def create_session_factory(engine: Engine) -> sessionmaker[Session]:
-    """Build a session factory bound to the given engine."""
-    return sessionmaker(bind=engine, expire_on_commit=False)
+def create_async_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
+    """Build an async session factory bound to the given engine."""
+    return async_sessionmaker(engine, expire_on_commit=False)
 
 
-def create_all(engine: Engine) -> None:
+async def create_all_async(engine: AsyncEngine) -> None:
     """Create all tables (development helper; production uses Alembic)."""
-    Base.metadata.create_all(engine)
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)

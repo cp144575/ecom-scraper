@@ -10,7 +10,8 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", Settings().database_url)
+# Alembic runs synchronously, so it uses the sync URL while the async engine uses DATABASE_URL.
+config.set_main_option("sqlalchemy.url", Settings().sync_database_url)
 target_metadata = Base.metadata
 
 

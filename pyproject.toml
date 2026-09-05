@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ecom-scraper"
-version = "0.1.0"
-description = "Self-built crawler engine for multi-platform e-commerce data collection."
+version = "0.2.0"
+description = "Self-built async crawler engine for multi-platform e-commerce data collection."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { text = "MIT" }
@@ -16,13 +16,18 @@ dependencies = [
     "sqlalchemy>=2",
     "alembic",
     "orjson",
-    "httpx",
+    "aiohttp",
+    "asyncmy",
+    "redis",
+    "aiosqlite",
     "pymysql",
+    "structlog",
 ]
 
 [dependency-groups]
 dev = [
     "pytest",
+    "pytest-asyncio",
     "ruff",
     "mypy",
 ]
@@ -55,3 +60,4 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+asyncio_mode = "auto"

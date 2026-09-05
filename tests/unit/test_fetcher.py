@@ -1,29 +1,34 @@
-import httpx
 import pytest
+from aiohttp import web
+from aiohttp.test_utils import TestClient, TestServer
 
 from ecom_scraper.exceptions import FetchError
-from ecom_scraper.fetcher.http import HttpxFetcher
+from ecom_scraper.fetcher.aiohttp import AiohttpFetcher
 from ecom_scraper.request.request import Request
 
 
-def test_fetcher_returns_response() -> None:
-    def handler(request: httpx.Request) -> httpx.Response:
-        return httpx.Response(200, text="<html></html>")
+async def test_fetcher_returns_response() -> None:
+    async def handler(request: web.Request) -> web.Response:
+        return web.Response(text="hello")
 
-    transport = httpx.MockTransport(handler)
-    with httpx.Client(transport=transport) as client:
-        fetcher = HttpxFetcher(client=client)
-        response = fetcher.fetch(Request(url="https://example.com"))
-    assert response.status_code == 200
-    assert response.body == b"<html></html>"
+    app = web.Application()
+    app.router.add_get("/product", handler)
+    server = TestServer(app)
+    client = TestClient(server)
+    await client.start_server()
+    try:
+        fetcher = AiohttpFetcher(session=client.session)
+        response = await fetcher.fetch(Request(url=str(client.make_url("/product"))))
+        assert response.status_code == 200
+        assert response.body == b"hello"
+    finally:
+        await client.close()
 
 
-def test_fetcher_wraps_network_error_as_fetch_error() -> None:
-    def handler(request: httpx.Request) -> httpx.Response:
-        raise httpx.ConnectError("boom", request=request)
-
-    transport = httpx.MockTransport(handler)
-    with httpx.Client(transport=transport) as client:
-        fetcher = HttpxFetcher(client=client)
+async def test_fetcher_wraps_connection_error() -> None:
+    fetcher = AiohttpFetcher(timeout=1.0)
+    try:
         with pytest.raises(FetchError):
-            fetcher.fetch(Request(url="https://example.com"))
+            await fetcher.fetch(Request(url="http://127.0.0.1:1/"))
+    finally:
+        await fetcher.close()

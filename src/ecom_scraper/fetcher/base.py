@@ -7,8 +7,8 @@ from ecom_scraper.request.response import Response
 
 
 class Fetcher(Protocol):
-    """Fetches a request and returns a response."""
+    """Fetches a request asynchronously and returns a response."""
 
-    def fetch(self, request: Request) -> Response:
+    async def fetch(self, request: Request) -> Response:
         """Fetch the request, returning a response or raising FetchError."""
         ...
